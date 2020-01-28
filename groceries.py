@@ -1,6 +1,7 @@
 # groceries.py
 
 #from pprint import pprint
+import operator
 
 products = [
     {"id":1, "name": "Chocolate Sandwich Cookies", "department": "snacks", "aisle": "cookies cakes", "price": 3.50},
@@ -30,6 +31,15 @@ products = [
 
 # TODO: write some Python code here to produce the desired output
 
+def to_usd(my_price):
+    return f"${my_price:,.2f}" #> $12,000.71
+    """
+    Converts a numeric value to usd-formatted string, for printing and display purposes.
+    Source: https://github.com/prof-rossetti/intro-to-python/blob/master/notes/python/datatypes/numbers.md#formatting-as-currency
+    Param: my_price (int or float) like 4000.444444
+    Example: to_usd(4000.444444)
+    Returns: $4,000.44
+    """
 
 print("------------------------")
 print(f"THERE ARE {len(products)} PRODUCTS:")
@@ -44,9 +54,33 @@ print(f"THERE ARE {len(products)} PRODUCTS:")
 
 print("------------------------")
 
-for prod in products:
-    print("+ ", prod["name"], "($",prod["price"], ")")
+sorted_products = sorted(products, key = operator.itemgetter("name"))
 
+for prod in sorted_products:
+    print("+ ", prod["name"], "(", to_usd(prod["price"]), ")")
+
+print("------------------------")
+print("THERE ARE ", len("department"), " DEPARTMENTS:")
+print("------------------------")
+
+depts = []
+
+for prod in sorted_products:
+    if prod["department"] not in depts:
+        depts.append(prod["department"])
+
+sorted_departments = sorted(depts)
+
+for d in sorted_departments:
+    matching_dept = [prod for prod in products if prod["department"] == d]
+    matching_dept_count =len(matching_dept)
+    
+    if (matching_dept_count > 1):
+        print("+ ", d.title(), "(", matching_dept_count, "products)")
+    else:
+        print("+ ", d.title(), "(", matching_dept_count, "product)")
+
+ 
 
 # -------------
 # THERE ARE 20 PRODUCTS:
@@ -71,3 +105,16 @@ for prod in products:
 # + Saline Nasal Mist ($16.00)
 # + Smart Ones Classic Favorites Mini Rigatoni With Vodka Cream Sauce ($6.99)
 # + Sparkling Orange Juice & Prickly Pear Beverage ($2.99)
+#--------------
+#THERE ARE 10 DEPARTMENTS:
+#--------------
+# + Babies (1 product)
+# + Beverages (5 products)
+# + Dairy Eggs (1 product)
+# + Dry Goods Pasta (1 product)
+# + Frozen (4 products)
+# + Household (1 product)
+# + Meat Seafood (1 product)
+# + Pantry (2 products)
+# + Personal Care (2 products)
+# + Snacks (2 products)
